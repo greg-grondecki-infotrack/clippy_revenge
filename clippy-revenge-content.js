@@ -210,6 +210,10 @@ clippy.load('Clippy', function (agent) {
     // animate,
     colourChangy,
     clicky,
+    urlchangy,
+    urlchangy,
+    urlchangy,
+    urlchangy,
     urlchangy
   ]
 
