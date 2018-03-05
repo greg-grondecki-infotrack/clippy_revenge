@@ -8,90 +8,27 @@ var pollyStarty = function (agent) {
   debugger;
   window.setInterval(function () {
 
-    var boardInfo = queues.getBoardAlertImportanceAsync(function(response){var a = queues.getQueuesMessage(response);poppyUppy(agent, a); });
-    //poppyUppy(agent, boardInfo);
-  
+    var boardInfo = queues.getBoardAlertImportanceAsync(function (response) {
+      var message = queues.getQueuesMessage(response);
+      poppyUppy(agent, message);
+    });
 
   }, pollingInterval);
 }
 
-var poppyUppy = function(agent, speaky) {
+var poppyUppy = function (agent, speaky) {
   if (popupWindow == null || popupWindow.closed) {
-    popupWindow = window.open("", "", "width=200,height=200");
-    var head = $('<head></head>').append(`<style>.clippy, .clippy-balloon {
-    position: fixed;
-    z-index: 1000;
-    cursor: pointer;
-}
+    popupWindow = window.open("", "", "width=600,height=600");
 
-.clippy-balloon {
+    $(popupWindow.document.head).append(hardcodedStyle());
 
-    background: #FFC;
-    color: black;
-    padding: 8px;
-    border: 1px solid black;
-    border-radius: 5px;
+    clippyElement.style.top = '250px';
+    clippyElement.style.left = '250px';
 
-}
-
-.clippy-content {
-    max-width: 200px;
-    min-width: 120px;
-    font-family: "Microsoft Sans", sans-serif;
-    font-size: 10pt;
-}
-
-.clippy-tip {
-    width: 10px;
-    height: 16px;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAgCAMAAAAlvKiEAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRF///MAAAA////52QwgAAAAAN0Uk5T//8A18oNQQAAAGxJREFUeNqs0kEOwCAIRFHn3//QTUU6xMyyxii+jQosrTPkyPEM6IN3FtzIRk1U4dFeKWQiH6pRRowMVKEmvronEynkwj0uZJgR22+YLopPSo9P34wJSamLSU7lSIWLJU7NkNomNlhqxUeAAQC+TQLZyEuJBwAAAABJRU5ErkJggg==) no-repeat;
-    position: absolute;
-}
-
-.clippy-top-left .clippy-tip {
-    top: 100%;
-    margin-top: 0px;
-    left: 100%;
-    margin-left: -50px;
-}
-
-.clippy-top-right .clippy-tip {
-    top: 100%;
-    margin-top: 0px;
-    left: 0;
-    margin-left: 50px;
-    background-position: -10px 0;
-
-}
-
-.clippy-bottom-right .clippy-tip {
-    top: 0;
-    margin-top: -16px;
-    left: 0;
-    margin-left: 50px;
-    background-position: -10px -16px;
-}
-
-.clippy-bottom-left .clippy-tip {
-    top: 0;
-    margin-top: -16px;
-    left: 100%;
-    margin-left: -50px;
-    background-position: 0px -16px;
-}
-
-</style>`);
-    var html = $('<body>')
-      
+    $(popupWindow.document.body)
       .append(clippyBalloonElement)
-      .append(clippyElement)
-    ;
-    popupWindow.document.head = head[0];
-    popupWindow.document.body = html[0];
-    // html.append(clippyElement);
+      .append(clippyElement);
 
-    // popupWindow.document.body.appendChild(clippyElement);
-    // popupWindow.document.body.appendChild(clippyBalloonElement);
     popupWindow.agent = agent;
     popupWindow.agent.show();
   }
@@ -250,23 +187,90 @@ clippy.load('Clippy', function (agent) {
 
   var count = 0;
 
-  chrome.extension.sendMessage({}, function(response) {
+  chrome.extension.sendMessage({}, function (response) {
     var username = response.email;
     var keithy = username.indexOf("peter") !== -1;
     if (keithy) {
       alert("KEITH MODE ENABLED")
-      window.setInterval(function(){
+      window.setInterval(function () {
         // var fun = arr[Math.floor(Math.random()*arr.length)];
         var fun = arr[count];
         count++;
-        if (count > arr.length)
-        {
+        if (count > arr.length) {
           count = 0;
         }
-        if(clippy.isEmpty()){
+        if (clippy.isEmpty()) {
           fun();
         }
       }, 10000);
     }
   });
 });
+
+var hardcodedStyle = function () {
+  return `
+      <style>
+        .clippy, .clippy-balloon {
+            position: fixed;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .clippy-balloon {
+
+            background: #FFC;
+            color: black;
+            padding: 8px;
+            border: 1px solid black;
+            border-radius: 5px;
+
+        }
+
+        .clippy-content {
+            max-width: 200px;
+            min-width: 120px;
+            font-family: "Microsoft Sans", sans-serif;
+            font-size: 10pt;
+        }
+
+        .clippy-tip {
+            width: 10px;
+            height: 16px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAgCAMAAAAlvKiEAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRF///MAAAA////52QwgAAAAAN0Uk5T//8A18oNQQAAAGxJREFUeNqs0kEOwCAIRFHn3//QTUU6xMyyxii+jQosrTPkyPEM6IN3FtzIRk1U4dFeKWQiH6pRRowMVKEmvronEynkwj0uZJgR22+YLopPSo9P34wJSamLSU7lSIWLJU7NkNomNlhqxUeAAQC+TQLZyEuJBwAAAABJRU5ErkJggg==) no-repeat;
+            position: absolute;
+        }
+
+        .clippy-top-left .clippy-tip {
+            top: 100%;
+            margin-top: 0px;
+            left: 100%;
+            margin-left: -50px;
+        }
+
+        .clippy-top-right .clippy-tip {
+            top: 100%;
+            margin-top: 0px;
+            left: 0;
+            margin-left: 50px;
+            background-position: -10px 0;
+
+        }
+
+        .clippy-bottom-right .clippy-tip {
+            top: 0;
+            margin-top: -16px;
+            left: 0;
+            margin-left: 50px;
+            background-position: -10px -16px;
+        }
+
+        .clippy-bottom-left .clippy-tip {
+            top: 0;
+            margin-top: -16px;
+            left: 100%;
+            margin-left: -50px;
+            background-position: 0px -16px;
+        }
+      </style>
+    `
+};
