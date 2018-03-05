@@ -27,7 +27,7 @@ function restore_options() {
     favoriteColor: 'red',
     likesColor: true,
     keithy: false,
-    'enable-popups':false
+    enablePopups: false,
   }, function (items) {
     document.getElementById('color').value = items.favoriteColor;
     document.getElementById('like').checked = items.likesColor;
