@@ -5,7 +5,6 @@ var clippyBalloonElement = null;
 
 var pollyStarty = function (agent) {
   var pollingInterval = 5000;
-  debugger;
   window.setInterval(function () {
 
     var boardInfo = queues.getBoardAlertImportanceAsync(function (response) {
@@ -53,13 +52,11 @@ clippy.load('Clippy', function (agent) {
         if(response.keithy) {
           keithMode();
         } else {
-          startPolling(agent);
+          pollyStarty(agent);
         }
       });
     }
   });
-
-  // startPolling(agent);
 
   var callsf = function (yescall) {
     return function () {
