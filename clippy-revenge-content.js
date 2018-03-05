@@ -4,25 +4,13 @@ var clippyElement = null;
 var clippyBalloonElement = null;
 
 var pollyStarty = function (agent) {
-  var pollingInterval = 5000;
-  debugger;
+  var pollingInterval = 10000;
   window.setInterval(function () {
 
-    var boardInfo = queues.getBoardAlertImportanceAsync(function (response) {
-      if (response.Importance === queues.BoardAlertImportance.LOW
-        || response.Importance === queues.BoardAlertImportance.MEDIUM
-        || response.Importance === queues.BoardAlertImportance.HIGH
-      ) {
-        poppyUppy(agent, "Oops, you better check the board! OrderUpdateRows: " + response.OrderUpdatesRows);
-      }
-      else if (response.Importance === queues.BoardAlertImportance.NONE) {
-        poppyUppy(agent, "Queues board looks ok. OrderUpdateRows: " + response.OrderUpdatesRows);
-      }
-      else {
-        poppyUppy(agent, "Unable to fetch queue data. Soz. Would you like to help me with that?");
-      }
+    queues.getBoardAlertImportanceAsync(function(response){
+      poppyUppy(agent, queues.getQueuesMessage(response)); 
     });
-
+    
   }, pollingInterval);
 }
 
