@@ -13,7 +13,6 @@ var queues = (function() {
   _queues.getBoardAlertImportanceAsync = function(callback) {
     _getQueueColour(true)
       .done(function(response) {
-          debugger;
         response = _setImportanceFromQueueColour(response);
           if(callback)
             callback(response)

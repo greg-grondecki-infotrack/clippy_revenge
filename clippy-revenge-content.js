@@ -1,4 +1,4 @@
-var startPolling = function () {
+var startPolling = function (agent) {
   var pollingInterval = 5000;
 
   window.setInterval(function () {
@@ -8,27 +8,23 @@ var startPolling = function () {
           || response.Importance === queues.BoardAlertImportance.MEDIUM
           || response.Importance === queues.BoardAlertImportance.HIGH
       ){
-        alert('Placeholder alert');
+        agent.speak("Oops, you better check the board! OrderUpdateRows: "+ response.OrderUpdatesRows);
+      }
+      else if(response.Importance === queues.BoardAlertImportance.NONE){
+        agent.speak("Queues board looks ok. OrderUpdateRows: "+ response.OrderUpdatesRows);
+      }
+      else{
+        agent.speak("Unable to fetch queue data. Soz. Would you like to help me with that?");
       }
     });
-    
-
-    // $.ajax({
-    //   url: 'http://auawsrpt001l/infocharting/Chart/BackGroundColor',
-    //   success: function (response) {
-    //     if (response.ChartColor = "Red") {
-    //       alert('Placeholder alert');
-    //       // agent.show();
-    //     }
-    //   }
-    // });
+   
   }, pollingInterval);
 }
 
 clippy.load('Clippy', function (agent) {
   // do anything with the loaded agent
 
-  startPolling();
+  startPolling(agent);
 
   var callsf = function (yescall) {
     return function () {
