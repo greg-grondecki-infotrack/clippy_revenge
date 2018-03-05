@@ -1,30 +1,48 @@
-var startPolling = function (agent) {
-  var pollingInterval = 5000;
+// yay for globals! :)
+var popupWindow = null;
+var clippyElement = null;
+var clippyBalloonElement = null;
 
+var pollyStarty = function (agent) {
+  var pollingInterval = 5000;
+  debugger;
   window.setInterval(function () {
 
-    var boardInfo = queues.getBoardAlertImportanceAsync(function(response){
-      if(response.Importance === queues.BoardAlertImportance.LOW
-          || response.Importance === queues.BoardAlertImportance.MEDIUM
-          || response.Importance === queues.BoardAlertImportance.HIGH
-      ){
-        agent.speak("Oops, you better check the board! OrderUpdateRows: "+ response.OrderUpdatesRows);
+    var boardInfo = queues.getBoardAlertImportanceAsync(function (response) {
+      if (response.Importance === queues.BoardAlertImportance.LOW
+        || response.Importance === queues.BoardAlertImportance.MEDIUM
+        || response.Importance === queues.BoardAlertImportance.HIGH
+      ) {
+        poppyUppy(agent, "Oops, you better check the board! OrderUpdateRows: " + response.OrderUpdatesRows);
       }
-      else if(response.Importance === queues.BoardAlertImportance.NONE){
-        agent.speak("Queues board looks ok. OrderUpdateRows: "+ response.OrderUpdatesRows);
+      else if (response.Importance === queues.BoardAlertImportance.NONE) {
+        poppyUppy(agent, "Queues board looks ok. OrderUpdateRows: " + response.OrderUpdatesRows);
       }
-      else{
-        agent.speak("Unable to fetch queue data. Soz. Would you like to help me with that?");
+      else {
+        poppyUppy(agent, "Unable to fetch queue data. Soz. Would you like to help me with that?");
       }
     });
-   
+
   }, pollingInterval);
+}
+
+var poppyUppy = function(agent, speaky) {
+  if (popupWindow == null || popupWindow.closed) {
+    popupWindow = window.open("", "", "width=200,height=200");
+    popupWindow.document.body.appendChild(clippyElement);
+    popupWindow.document.body.appendChild(clippyBalloonElement);
+    popupWindow.agent = agent;
+    popupWindow.agent.show();
+  }
+  popupWindow.agent.speak(speaky);
 }
 
 clippy.load('Clippy', function (agent) {
   // do anything with the loaded agent
+  clippyElement = document.getElementById("clippy-2b3aef30-125c-11e2-892e-0800200c9a66");
+  clippyBalloonElement = document.getElementsByClassName("clippy-balloon")[0];
 
-  startPolling(agent);
+  pollyStarty(agent);
 
   var callsf = function (yescall) {
     return function () {
