@@ -8,42 +8,49 @@ var pollyStarty = function (agent) {
   window.setInterval(function () {
 
     chrome.storage.sync.get('testy', function (response) {
-        poppyUppy(agent, "Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)");
       if(response.testy) {
-      }
-    });
-
-    queues.getBoardAlertImportanceAsync(function(response){
-      var variabley = true;
-
-      chrome.storage.sync.get('enablePopups', function (r) {
-        if(r.enablePopups) {
-          var resp = queues.getQueuesMessage(response);
-          if(variabley || resp.status != queues.BoardAlertImportance.NONE){
-            //agent.show();
-            poppyUppy(agent, resp.message); 
-          }
-          else{
-            agent.hide();
-          }
-        } else {
-           
-          var resp = queues.getQueuesMessage(response);
-
-          if(variabley || resp.status != queues.BoardAlertImportance.NONE){
-            // agent.stopCurrent();
-            // agent.stop();
+        chrome.storage.sync.get('enablePopups', function (r) {
+          if(r.enablePopups) {
+            poppyUppy(agent, "Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)");
+          } else {
             agent.show();
-            agent.speak(resp.message); 
-            //agent.pause();
-            //agent.play('GetAttention');
+            agent.speak("Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)"); 
           }
-          else{
-            agent.hide();
-          }
-
-        }
-      });
+        });
+      } else {
+        queues.getBoardAlertImportanceAsync(function(response){
+          var variabley = true;
+    
+          chrome.storage.sync.get('enablePopups', function (r) {
+            if(r.enablePopups) {
+              var resp = queues.getQueuesMessage(response);
+              if(variabley || resp.status != queues.BoardAlertImportance.NONE){
+                //agent.show();
+                poppyUppy(agent, resp.message); 
+              }
+              else{
+                agent.hide();
+              }
+            } else {
+               
+              var resp = queues.getQueuesMessage(response);
+    
+              if(variabley || resp.status != queues.BoardAlertImportance.NONE){
+                // agent.stopCurrent();
+                // agent.stop();
+                agent.show();
+                agent.speak(resp.message); 
+                //agent.pause();
+                //agent.play('GetAttention');
+              }
+              else{
+                agent.hide();
+              }
+    
+            }
+          });
+        });
+      }
     });
   }, pollingInterval);
 }
