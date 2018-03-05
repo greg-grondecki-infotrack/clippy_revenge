@@ -6,47 +6,36 @@ var clippyBalloonElement = null;
 var pollyStarty = function (agent) {
   var pollingInterval = 5000;
   window.setInterval(function () {
-
     chrome.storage.sync.get('testy', function (response) {
-      if(response.testy) {
+      if (response.testy) {
         chrome.storage.sync.get('enablePopups', function (r) {
-          if(r.enablePopups) {
+          if (r.enablePopups) {
             poppyUppy(agent, "Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)");
           } else {
             agent.show();
-            agent.speak("Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)"); 
+            agent.speak("Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)");
           }
         });
       } else {
-        queues.getBoardAlertImportanceAsync(function(response){
-          var variabley = true;
-    
+        queues.getBoardAlertImportanceAsync(function (response) {
           chrome.storage.sync.get('enablePopups', function (r) {
-            if(r.enablePopups) {
+            if (r.enablePopups) {
               var resp = queues.getQueuesMessage(response);
-              if(variabley || resp.status != queues.BoardAlertImportance.NONE){
-                //agent.show();
-                poppyUppy(agent, resp.message); 
+              if (resp.status != queues.BoardAlertImportance.NONE) {
+                poppyUppy(agent, resp.message);
               }
-              else{
-                agent.hide();
+              else {
+                popupWindow.close();
               }
             } else {
-               
               var resp = queues.getQueuesMessage(response);
-    
-              if(variabley || resp.status != queues.BoardAlertImportance.NONE){
-                // agent.stopCurrent();
-                // agent.stop();
+              if (resp.status != queues.BoardAlertImportance.NONE) {
                 agent.show();
-                agent.speak(resp.message); 
-                //agent.pause();
-                //agent.play('GetAttention');
+                agent.speak(resp.message);
               }
-              else{
+              else {
                 agent.hide();
               }
-    
             }
           });
         });
@@ -90,7 +79,7 @@ clippy.load('Clippy', function (agent) {
       keithMode();
     } else {
       chrome.storage.sync.get('keithy', function (response) {
-        if(response.keithy) {
+        if (response.keithy) {
           keithMode();
         } else {
           pollyStarty(agent);
@@ -245,7 +234,7 @@ clippy.load('Clippy', function (agent) {
 
   var count = 0;
   var initial = true;
-  
+
   var keithMode = function () {
     window.setInterval(function () {
       if (initial) {
