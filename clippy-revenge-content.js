@@ -3,28 +3,45 @@ var startPolling = function (agent) {
 
   window.setInterval(function () {
 
-    var boardInfo = queues.getBoardAlertImportanceAsync(function(response){
-      if(response.Importance === queues.BoardAlertImportance.LOW
-          || response.Importance === queues.BoardAlertImportance.MEDIUM
-          || response.Importance === queues.BoardAlertImportance.HIGH
-      ){
-        agent.speak("Oops, you better check the board! OrderUpdateRows: "+ response.OrderUpdatesRows);
+    var boardInfo = queues.getBoardAlertImportanceAsync(function (response) {
+      if (response.Importance === queues.BoardAlertImportance.LOW
+        || response.Importance === queues.BoardAlertImportance.MEDIUM
+        || response.Importance === queues.BoardAlertImportance.HIGH
+      ) {
+        agent.speak("Oops, you better check the board! OrderUpdateRows: " + response.OrderUpdatesRows);
       }
-      else if(response.Importance === queues.BoardAlertImportance.NONE){
-        agent.speak("Queues board looks ok. OrderUpdateRows: "+ response.OrderUpdatesRows);
+      else if (response.Importance === queues.BoardAlertImportance.NONE) {
+        agent.speak("Queues board looks ok. OrderUpdateRows: " + response.OrderUpdatesRows);
       }
-      else{
+      else {
         agent.speak("Unable to fetch queue data. Soz. Would you like to help me with that?");
       }
     });
-   
+
   }, pollingInterval);
 }
 
 clippy.load('Clippy', function (agent) {
   // do anything with the loaded agent
 
-  startPolling(agent);
+  chrome.extension.sendMessage({}, function (response) {
+    var username = response.email;
+    var keithy = username.indexOf("keith") !== -1;
+
+    if (keithy) {
+      keithMode();
+    } else {
+      chrome.storage.sync.get('keithy', function (response) {
+        if(response.keithy) {
+          keithMode();
+        } else {
+          startPolling(agent);
+        }
+      });
+    }
+  });
+
+  // startPolling(agent);
 
   var callsf = function (yescall) {
     return function () {
@@ -121,7 +138,7 @@ clippy.load('Clippy', function (agent) {
     agent.speak("Web fact: the internet was first created by Keith von Infotrackhausen. True story.");
   };
 
-  var cat8 = function () {
+  var caty = function () {
     if ($('img').length == 0) { return; }
     var yescall = function () {
       $('img').attr('src', 'http://cdn77.sadanduseless.com/wp-content/uploads/2014/03/derp3.jpg')
@@ -131,11 +148,11 @@ clippy.load('Clippy', function (agent) {
 
   var colourChangy = function () {
     var yescall = function () {
-      $('body').css({ color: "yellow", background: "black" })
-      $('div').css({ color: "yellow", background: "black" })
+      $('body').css({ color: "orange", background: "grey" })
+      $('div').css({ color: "yellow", background: "green" })
       $('a').css({ color: "blue", background: "white" })
     }
-    agent.speak("I have a better color scheme, want me to switch to it?<br /><br /><a href=\"#\" class=\"clippyyes\">YES</a>    <a href=\"#\" class=\"clippyno\">NO</a>", true, callsf(yescall));
+    agent.speak("I have a better color scheme, want me to switch to it?<br /><br /><a href=\"#\" class=\"clippyyes\">YES</a>    <a href=\"#\" class=\"clippyyes\">NO</a>", true, callsf(yescall));
   };
 
   var animate = function () {
@@ -149,45 +166,41 @@ clippy.load('Clippy', function (agent) {
     fun();
   });
 
+  // use this order for demo
   var arr = [
-    urlchangy,
+    animate,
     insulty,
-    urlchangy,
+    caty,
+    // animate,
+    // formfilly,
     techy,
-    clicky,
     facty1,
-    pleasy,
-    colourChangy,
-    linky,
-    animate,
     facty2,
-    cat8,
-    cat8,
-    animate,
-    formfilly,
-    scrolly,
-    animate
+    linky,
+    // animate,
+    colourChangy,
+    clicky,
+    urlchangy
   ]
 
   var count = 0;
-
-  chrome.extension.sendMessage({}, function(response) {
-    var username = response.email;
-    var keithy = username.indexOf("peter") !== -1;
-    if (keithy) {
-      alert("KEITH MODE ENABLED")
-      window.setInterval(function(){
-        // var fun = arr[Math.floor(Math.random()*arr.length)];
+  var initial = true;
+  
+  var keithMode = function () {
+    window.setInterval(function () {
+      if (initial) {
+        agent.speak("Keithy mode enabled, muhahahahaha.");
+        initial = false;
+      } else {
         var fun = arr[count];
         count++;
-        if (count > arr.length)
-        {
+        if (count == arr.length) {
           count = 0;
         }
-        if(clippy.isEmpty()){
+        if (clippy.isEmpty()) {
           fun();
         }
-      }, 10000);
-    }
-  });
+      }
+    }, 8000);
+  }
 });
