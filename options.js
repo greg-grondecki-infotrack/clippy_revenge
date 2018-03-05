@@ -1,13 +1,11 @@
 // Saves options to chrome.storage.sync.
 function save_options() {
-  var color = document.getElementById('color').value;
-  var likesColor = document.getElementById('like').checked;
   var keithy = document.getElementById('keithy').checked;
+  var testy = document.getElementById('testy').checked;
   var enablePopups = document.getElementById('enablePopups').checked;
   chrome.storage.sync.set({
-    favoriteColor: color,
-    likesColor: likesColor,
     keithy: keithy,
+    testy: testy,
     enablePopups: enablePopups
   }, function () {
     // Update status to let user know options were saved.
@@ -24,14 +22,12 @@ function save_options() {
 function restore_options() {
   // Use default value color = 'red' and likesColor = true.
   chrome.storage.sync.get({
-    favoriteColor: 'red',
-    likesColor: true,
     keithy: false,
+    testy: false,
     enablePopups: false,
   }, function (items) {
-    document.getElementById('color').value = items.favoriteColor;
-    document.getElementById('like').checked = items.likesColor;
     document.getElementById('keithy').checked = items.keithy;
+    document.getElementById('testy').checked = items.testy;
     document.getElementById('enablePopups').checked = items.enablePopups;
   });
 }

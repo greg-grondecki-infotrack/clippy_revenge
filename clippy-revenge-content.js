@@ -6,6 +6,13 @@ var clippyBalloonElement = null;
 var pollyStarty = function (agent) {
   var pollingInterval = 50000;
   window.setInterval(function () {
+    
+    chrome.storage.sync.get('testy', function (response) {
+        poppyUppy(agent, "Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)");
+      if(response.testy) {
+      }
+    });
+
     queues.getBoardAlertImportanceAsync(function(response){
       chrome.storage.sync.get('enablePopups', function (r) {
         if(r.enablePopups) {
