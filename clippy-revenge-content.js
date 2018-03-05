@@ -34,7 +34,7 @@ var pollyStarty = function (agent) {
             // agent.stopCurrent();
             // agent.stop();
             agent.show();
-            agent.speak(queues.getQueuesMessage(response)); 
+            agent.speak(resp.message); 
             //agent.pause();
             //agent.play('GetAttention');
           }
