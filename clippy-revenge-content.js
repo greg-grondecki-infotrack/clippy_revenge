@@ -4,11 +4,22 @@ var clippyElement = null;
 var clippyBalloonElement = null;
 
 var pollyStarty = function (agent) {
-  var pollingInterval = 10000;
+  var pollingInterval = 20000;
   window.setInterval(function () {
 
     queues.getBoardAlertImportanceAsync(function(response){
-      poppyUppy(agent, queues.getQueuesMessage(response)); 
+
+      chrome.storage.sync.get('enablePopups', function (r) {
+        if(r.enablePopups) {
+          poppyUppy(agent, queues.getQueuesMessage(response)); 
+        } else {
+          // agent.show();
+          // agent.stopCurrent();
+          // agent.stop();
+          agent.speak(queues.getQueuesMessage(response)); 
+          agent.play('GetAttention');
+        }
+      });
     });
     
   }, pollingInterval);

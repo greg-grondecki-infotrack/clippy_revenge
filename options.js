@@ -3,10 +3,12 @@ function save_options() {
   var color = document.getElementById('color').value;
   var likesColor = document.getElementById('like').checked;
   var keithy = document.getElementById('keithy').checked;
+  var enablePopups = document.getElementById('enablePopups').checked;
   chrome.storage.sync.set({
     favoriteColor: color,
     likesColor: likesColor,
-    keithy: keithy
+    keithy: keithy,
+    enablePopups: enablePopups
   }, function () {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
@@ -24,12 +26,17 @@ function restore_options() {
   chrome.storage.sync.get({
     favoriteColor: 'red',
     likesColor: true,
-    keithy: false
+    keithy: false,
+    'enable-popups':false
   }, function (items) {
     document.getElementById('color').value = items.favoriteColor;
     document.getElementById('like').checked = items.likesColor;
     document.getElementById('keithy').checked = items.keithy;
+    document.getElementById('enablePopups').checked = items.enablePopups;
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click', save_options);
+var save = document.getElementById('save');
+if(save){
+  save.addEventListener('click', save_options);
+}
