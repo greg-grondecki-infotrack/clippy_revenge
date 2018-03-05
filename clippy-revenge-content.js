@@ -59,7 +59,7 @@ clippy.load('Clippy', function (agent) {
 
 
   var urlchangy = function () {
-    var yescall = function () { window.location.href = 'http://www.theuselessweb.com/'; }
+    var yescall = function () { window.location.href = 'http://heeeeeeeey.com/'; }
     agent.speak("I can't help but notice you are on some stupid web page. Want to let me just take you to a cool page?<br /><br /><a href=\"#\" class=\"clippyyes\">YES</a>    <a href=\"#\" class=\"clippyno\">NO</a>", true, callsf(yescall));
   };
 
@@ -87,12 +87,12 @@ clippy.load('Clippy', function (agent) {
     agent.speak("You seem to be taking your time. Want me to scroll down for you?<br /><br /><a href=\"#\" class=\"clippyyes\">YES</a>    <a href=\"#\" class=\"clippyno\">NO</a>", true, callsf(yescall));
   };
 
-  var cat1 = function () {
+  var techy = function () {
     agent.play('GetTechy');
     agent.speak("Did you know, the term \"surfing the web\" came about when a popular surfer ran into a spider web while on his laptop?");
   };
 
-  var cat2 = function () {
+  var clicky = function () {
     if ($('a').length == 0) { return; }
     var yescall = function () {
       $('a')[Math.floor(Math.random() * $('a').length)].click()
@@ -100,16 +100,16 @@ clippy.load('Clippy', function (agent) {
     agent.speak("I see some links... want me to pick one and click on it for you?<br /><br /><a href=\"#\" class=\"clippyyes\">YES</a>    <a href=\"#\" class=\"clippyno\">NO</a>", true, callsf(yescall));
   };
 
-  var cat3 = function () {
+  var facty1 = function () {
     agent.speak("Web fact: Internet Explorer is the worst. No one likes it. No one likes developing for it.");
   };
 
-  var cat4 = function () {
+  var pleasy = function () {
     agent.play('Pleased');
     agent.speak("Hmmm.... yes indeed.");
   };
 
-  var cat6 = function () {
+  var linky = function () {
     if ($('a').length == 0) { return; }
     var yescall = function () {
       $('a').css({ color: "red", background: "blue" });
@@ -117,8 +117,8 @@ clippy.load('Clippy', function (agent) {
     agent.speak("Hey did you know there are links on this page? Want me to highlight them for you?<br /><br /><a href=\"#\" class=\"clippyyes\">YES</a>    <a href=\"#\" class=\"clippyno\">NO</a>", true, callsf(yescall));
   };
 
-  var cat7 = function () {
-    agent.speak("Web fact: the internet was first created by Gilbert von Interneterhausen. True story.");
+  var facty2 = function () {
+    agent.speak("Web fact: the internet was first created by Keith von Infotrackhausen. True story.");
   };
 
   var cat8 = function () {
@@ -129,7 +129,7 @@ clippy.load('Clippy', function (agent) {
     agent.speak("This page needs more cats, should I put more cats on the page?<br /><br /><a href=\"#\" class=\"clippyyes\">YES</a>    <a href=\"#\" class=\"clippyno\">NO</a>", true, callsf(yescall));
   };
 
-  var cat9 = function () {
+  var colourChangy = function () {
     var yescall = function () {
       $('body').css({ color: "yellow", background: "black" })
       $('div').css({ color: "yellow", background: "black" })
@@ -153,14 +153,14 @@ clippy.load('Clippy', function (agent) {
     urlchangy,
     insulty,
     urlchangy,
-    cat1,
-    cat2,
-    cat3,
-    cat4,
-    cat9,
-    cat6,
+    techy,
+    clicky,
+    facty1,
+    pleasy,
+    colourChangy,
+    linky,
     animate,
-    cat7,
+    facty2,
     cat8,
     cat8,
     animate,
@@ -169,24 +169,25 @@ clippy.load('Clippy', function (agent) {
     animate
   ]
 
+  var count = 0;
+
   chrome.extension.sendMessage({}, function(response) {
     var username = response.email;
-    var keithy = username.indexOf("test") !== -1;
+    var keithy = username.indexOf("peter") !== -1;
     if (keithy) {
       alert("KEITH MODE ENABLED")
       window.setInterval(function(){
-        var fun = arr[Math.floor(Math.random()*arr.length)];
+        // var fun = arr[Math.floor(Math.random()*arr.length)];
+        var fun = arr[count];
+        count++;
+        if (count > arr.length)
+        {
+          count = 0;
+        }
         if(clippy.isEmpty()){
           fun();
         }
       }, 10000);
-    } else {
-      window.setInterval(function(){
-        var fun = arr[Math.floor(Math.random()*arr.length)];
-        if(clippy.isEmpty()){
-          fun();
-        }
-      }, 45000);
     }
   });
 });
