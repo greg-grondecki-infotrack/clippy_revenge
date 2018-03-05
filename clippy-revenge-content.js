@@ -8,20 +8,9 @@ var pollyStarty = function (agent) {
   debugger;
   window.setInterval(function () {
 
-    var boardInfo = queues.getBoardAlertImportanceAsync(function (response) {
-      if (response.Importance === queues.BoardAlertImportance.LOW
-        || response.Importance === queues.BoardAlertImportance.MEDIUM
-        || response.Importance === queues.BoardAlertImportance.HIGH
-      ) {
-        poppyUppy(agent, "Oops, you better check the board! OrderUpdateRows: " + response.OrderUpdatesRows);
-      }
-      else if (response.Importance === queues.BoardAlertImportance.NONE) {
-        poppyUppy(agent, "Queues board looks ok. OrderUpdateRows: " + response.OrderUpdatesRows);
-      }
-      else {
-        poppyUppy(agent, "Unable to fetch queue data. Soz. Would you like to help me with that?");
-      }
-    });
+    var boardInfo = queues.getBoardAlertImportanceAsync(function(response){var a = queues.getQueuesMessage(response);poppyUppy(agent, a); });
+    //poppyUppy(agent, boardInfo);
+  
 
   }, pollingInterval);
 }
@@ -29,8 +18,80 @@ var pollyStarty = function (agent) {
 var poppyUppy = function(agent, speaky) {
   if (popupWindow == null || popupWindow.closed) {
     popupWindow = window.open("", "", "width=200,height=200");
-    popupWindow.document.body.appendChild(clippyElement);
-    popupWindow.document.body.appendChild(clippyBalloonElement);
+    var head = $('<head></head>').append(`<style>.clippy, .clippy-balloon {
+    position: fixed;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.clippy-balloon {
+
+    background: #FFC;
+    color: black;
+    padding: 8px;
+    border: 1px solid black;
+    border-radius: 5px;
+
+}
+
+.clippy-content {
+    max-width: 200px;
+    min-width: 120px;
+    font-family: "Microsoft Sans", sans-serif;
+    font-size: 10pt;
+}
+
+.clippy-tip {
+    width: 10px;
+    height: 16px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAgCAMAAAAlvKiEAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRF///MAAAA////52QwgAAAAAN0Uk5T//8A18oNQQAAAGxJREFUeNqs0kEOwCAIRFHn3//QTUU6xMyyxii+jQosrTPkyPEM6IN3FtzIRk1U4dFeKWQiH6pRRowMVKEmvronEynkwj0uZJgR22+YLopPSo9P34wJSamLSU7lSIWLJU7NkNomNlhqxUeAAQC+TQLZyEuJBwAAAABJRU5ErkJggg==) no-repeat;
+    position: absolute;
+}
+
+.clippy-top-left .clippy-tip {
+    top: 100%;
+    margin-top: 0px;
+    left: 100%;
+    margin-left: -50px;
+}
+
+.clippy-top-right .clippy-tip {
+    top: 100%;
+    margin-top: 0px;
+    left: 0;
+    margin-left: 50px;
+    background-position: -10px 0;
+
+}
+
+.clippy-bottom-right .clippy-tip {
+    top: 0;
+    margin-top: -16px;
+    left: 0;
+    margin-left: 50px;
+    background-position: -10px -16px;
+}
+
+.clippy-bottom-left .clippy-tip {
+    top: 0;
+    margin-top: -16px;
+    left: 100%;
+    margin-left: -50px;
+    background-position: 0px -16px;
+}
+
+</style>`);
+    var html = $('<body>')
+      
+      .append(clippyBalloonElement)
+      .append(clippyElement)
+    ;
+    popupWindow.document.head = head[0];
+    popupWindow.document.body = html[0];
+    // html.append(clippyElement);
+
+    // popupWindow.document.body.appendChild(clippyElement);
+    // popupWindow.document.body.appendChild(clippyBalloonElement);
     popupWindow.agent = agent;
     popupWindow.agent.show();
   }
