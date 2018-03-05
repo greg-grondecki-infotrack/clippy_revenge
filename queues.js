@@ -37,7 +37,8 @@ var queues = (function() {
       else{
         message = "Unable to fetch queue data. Soz. Would you like to help me with that?";
       }
-      return message;
+
+      return {message: message, status: response.Importance}
   };
 
   return _queues;

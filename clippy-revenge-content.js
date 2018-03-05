@@ -9,15 +9,34 @@ var pollyStarty = function (agent) {
 
     queues.getBoardAlertImportanceAsync(function(response){
 
+      var variabley = true;
+
       chrome.storage.sync.get('enablePopups', function (r) {
         if(r.enablePopups) {
-          poppyUppy(agent, queues.getQueuesMessage(response)); 
+          var resp = queues.getQueuesMessage(response);
+          if(variabley || resp.status != queues.BoardAlertImportance.NONE){
+            //agent.show();
+            poppyUppy(agent, resp.message); 
+          }
+          else{
+            agent.hide();
+          }
         } else {
-          // agent.show();
-          // agent.stopCurrent();
-          // agent.stop();
-          agent.speak(queues.getQueuesMessage(response)); 
-          agent.play('GetAttention');
+           
+          var resp = queues.getQueuesMessage(response);
+
+          if(variabley || resp.status != queues.BoardAlertImportance.NONE){
+            // agent.stopCurrent();
+            // agent.stop();
+            agent.show();
+            agent.speak(queues.getQueuesMessage(response)); 
+            //agent.pause();
+            //agent.play('GetAttention');
+          }
+          else{
+            agent.hide();
+          }
+
         }
       });
     });
