@@ -4,7 +4,7 @@ var clippyElement = null;
 var clippyBalloonElement = null;
 
 var pollyStarty = function (agent) {
-  var pollingInterval = 5000;
+  var pollingInterval = 10000;
   window.setInterval(function () {
     chrome.storage.sync.get('testy', function (response) {
       if (response.testy) {
@@ -65,7 +65,7 @@ var poppyUppy = function (agent, speaky) {
 
 clippy.load('Clippy', function (agent) {
 
-  clippy.Balloon.prototype.CLOSE_BALLOON_DELAY = 40000;
+  clippy.Balloon.prototype.CLOSE_BALLOON_DELAY = 8000;
 
   // do anything with the loaded agent
   clippyElement = document.getElementById("clippy-2b3aef30-125c-11e2-892e-0800200c9a66");
