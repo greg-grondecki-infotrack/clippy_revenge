@@ -2,15 +2,26 @@ var startPolling = function () {
   var pollingInterval = 5000;
 
   window.setInterval(function () {
-    $.ajax({
-      url: 'http://auawsrpt001l/infocharting/Chart/BackGroundColor',
-      success: function (response) {
-        if (response.ChartColor = "Red") {
-          alert('Placeholder alert');
-          // agent.show();
-        }
+
+    var boardInfo = queues.getBoardAlertImportanceAsync(function(response){
+      if(response.Importance === queues.BoardAlertImportance.LOW
+          || response.Importance === queues.BoardAlertImportance.MEDIUM
+          || response.Importance === queues.BoardAlertImportance.HIGH
+      ){
+        alert('Placeholder alert');
       }
     });
+    
+
+    // $.ajax({
+    //   url: 'http://auawsrpt001l/infocharting/Chart/BackGroundColor',
+    //   success: function (response) {
+    //     if (response.ChartColor = "Red") {
+    //       alert('Placeholder alert');
+    //       // agent.show();
+    //     }
+    //   }
+    // });
   }, pollingInterval);
 }
 
