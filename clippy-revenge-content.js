@@ -4,7 +4,7 @@ var clippyElement = null;
 var clippyBalloonElement = null;
 
 var pollyStarty = function (agent) {
-  var pollingInterval = 20000;
+  var pollingInterval = 50000;
   window.setInterval(function () {
 
     queues.getBoardAlertImportanceAsync(function(response){
@@ -37,6 +37,9 @@ var poppyUppy = function(agent, speaky) {
 }
 
 clippy.load('Clippy', function (agent) {
+
+  clippy.Balloon.prototype.CLOSE_BALLOON_DELAY = 40000;
+
   // do anything with the loaded agent
   clippyElement = document.getElementById("clippy-2b3aef30-125c-11e2-892e-0800200c9a66");
   clippyBalloonElement = document.getElementsByClassName("clippy-balloon")[0];
