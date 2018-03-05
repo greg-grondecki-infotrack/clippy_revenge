@@ -5,7 +5,7 @@
   "manifest_version": 2,
   "description": "Finally, Clippy comes to Chrome! Get help browsing the web.",
   "permissions": [
-    "tabs", "http://*/*", "https://*/*"
+    "tabs", "http://*/*", "https://*/*", "identity", "identity.email"
   ],
   "icons": { "16": "icon16.png",
            "48": "icon48.png",

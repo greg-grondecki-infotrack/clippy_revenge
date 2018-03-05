@@ -168,10 +168,25 @@ clippy.load('Clippy', function (agent) {
     scrolly,
     animate
   ]
-  window.setInterval(function () {
-    var fun = arr[Math.floor(Math.random() * arr.length)];
-    if (clippy.isEmpty()) {
-      fun();
+
+  chrome.extension.sendMessage({}, function(response) {
+    var username = response.email;
+    var keithy = username.indexOf("test") !== -1;
+    if (keithy) {
+      alert("KEITH MODE ENABLED")
+      window.setInterval(function(){
+        var fun = arr[Math.floor(Math.random()*arr.length)];
+        if(clippy.isEmpty()){
+          fun();
+        }
+      }, 10000);
+    } else {
+      window.setInterval(function(){
+        var fun = arr[Math.floor(Math.random()*arr.length)];
+        if(clippy.isEmpty()){
+          fun();
+        }
+      }, 45000);
     }
-  }, 45000);
+  });
 });
