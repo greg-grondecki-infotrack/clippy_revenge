@@ -9,15 +9,20 @@ var pollyStarty = function (agent) {
     chrome.storage.sync.get('testy', function (response) {
       if (response.testy) {
         chrome.storage.sync.get('enablePopups', function (r) {
+          var message = `Oops, you'd better <a href="http://auawsrpt001l/infocharting" target="_blank">check the board</a>! <br /><br />(OrderUpdateRows: 999,999,999,999) <br /><br />(panic!!!)`;
+          var message2 = "Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)";
+
           if (r.enablePopups) {
-            poppyUppy(agent, "Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)");
+            poppyUppy(agent, message);
           } else {
-            agent.show();
-            agent.speak("Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)");
+
+            agent.speak(message);
+            triggerClippyNotification(agent, message2);
           }
         });
       } else {
         queues.getBoardAlertImportanceAsync(function (response) {
+
           chrome.storage.sync.get('enablePopups', function (r) {
             if (r.enablePopups) {
               var resp = queues.getQueuesMessage(response);
@@ -30,21 +35,9 @@ var pollyStarty = function (agent) {
             } else {
               var resp = queues.getQueuesMessage(response);
               if (resp.status != queues.BoardAlertImportance.NONE) {
-                agent.show();
+              //if (true || resp.status != queues.BoardAlertImportance.NONE) {
                 agent.speak(resp.message);
-                
-                  // If clippy is not visible or the window clippy is in does not have focus, show a notification
-                  if(!$(agent._el).is(":visible") || !document.hasFocus()){
-                    chrome.extension.sendMessage({notify: {
-                      type:"basic",
-                      iconUrl: "clippy400.jpg",
-                      title:'Clippy: "Helloooooooooo?"',
-                      message: resp.message, 
-                      message: 'Clippy is trying to get your attention. Looks like there\'s an issue with the board!' ,
-                      isClickable: true,
-                      requireInteraction: true
-                    }});
-                  }
+                triggerClippyNotification(agent);
                 
               }
               else {
@@ -56,6 +49,24 @@ var pollyStarty = function (agent) {
       }
     });
   }, pollingInterval);
+}
+
+var triggerClippyNotification = function(agent, message){
+  // If clippy is not visible or the window clippy is in does not have focus, show a notification
+  if(!$(agent._el).is(":visible") || !document.hasFocus()){
+    if(!message){
+      message = 'Clippy is trying to get your attention. Looks like there\'s an issue with the board!';
+    }
+
+    chrome.extension.sendMessage({notify: {
+      type:"basic",
+      iconUrl: "clippy400.jpg",
+      title:'Clippy: "Helloooooooooo?"',
+      message: message,
+      isClickable: true,
+      requireInteraction: true
+    }});
+  }
 }
 
 var poppyUppy = function (agent, speaky) {
@@ -79,7 +90,7 @@ var poppyUppy = function (agent, speaky) {
 
 clippy.load('Clippy', function (agent) {
 
-  clippy.Balloon.prototype.CLOSE_BALLOON_DELAY = 8000;
+  clippy.Balloon.prototype.CLOSE_BALLOON_DELAY = 9000;
 
   // do anything with the loaded agent
   clippyElement = document.getElementById("clippy-2b3aef30-125c-11e2-892e-0800200c9a66");
