@@ -32,6 +32,20 @@ var pollyStarty = function (agent) {
               if (resp.status != queues.BoardAlertImportance.NONE) {
                 agent.show();
                 agent.speak(resp.message);
+                
+                  // If clippy is not visible or the window clippy is in does not have focus, show a notification
+                  if(!$(agent._el).is(":visible") || !document.hasFocus()){
+                    chrome.extension.sendMessage({notify: {
+                      type:"basic",
+                      iconUrl: "clippy400.jpg",
+                      title:'Clippy: "Helloooooooooo?"',
+                      message: resp.message, 
+                      message: 'Clippy is trying to get your attention. Looks like there\'s an issue with the board!' ,
+                      isClickable: true,
+                      requireInteraction: true
+                    }});
+                  }
+                
               }
               else {
                 agent.hide();
@@ -71,7 +85,7 @@ clippy.load('Clippy', function (agent) {
   clippyElement = document.getElementById("clippy-2b3aef30-125c-11e2-892e-0800200c9a66");
   clippyBalloonElement = document.getElementsByClassName("clippy-balloon")[0];
 
-  chrome.extension.sendMessage({}, function (response) {
+  chrome.extension.sendMessage({userChecky:true}, function (response) {
     var username = response.email;
     var keithy = username.indexOf("keith") !== -1;
 

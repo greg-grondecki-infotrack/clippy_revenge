@@ -1,8 +1,13 @@
-
 function initClippy() {
   chrome.tabs.executeScript(null,
-    {code:"clippy.show();"}
-  );
+      {code:"clippy.show();"}
+    );  
+}
+
+function dismissClippyNotification(notificationId){
+  //window.focus(); // doesn't seem to do anything
+  chrome.notifications.clear(notificationId);
+  window.open('http://auawsrpt001l/infocharting');
 }
 
 chrome.identity.getProfileUserInfo(
@@ -13,8 +18,15 @@ chrome.identity.getProfileUserInfo(
 
 chrome.tabs.onUpdated.addListener(initClippy);
 chrome.tabs.onCreated.addListener(initClippy);
+chrome.notifications.onClicked.addListener(dismissClippyNotification);
+
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
-    sendResponse({ email: email })
+    if(request.userChecky){
+      sendResponse({ email: email })
+    }
+    if(request.notify){
+      chrome.notifications.create("clippy_notificationy", request.notify);
+    }
   }
 )
