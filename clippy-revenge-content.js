@@ -1,31 +1,33 @@
+const pollingInterval = 10000;
+
 // yay for globals! :)
 var popupWindow = null;
-var clippyElement = null;
-var clippyBalloonElement = null;
+
+var pollIterations = 0;
 
 var pollyStarty = function (agent) {
-  var pollingInterval = 10000;
+  
   window.setInterval(function () {
-    chrome.storage.sync.get('testy', function (response) {
+
+    chrome.storage.sync.get(['testy', 'enablePopups'], function (response) {
       if (response.testy) {
-        chrome.storage.sync.get('enablePopups', function (r) {
-          var message = `Oops, you'd better <a href="http://auawsrpt001l/infocharting" target="_blank">check the board</a>! <br /><br />(OrderUpdateRows: 999,999,999,999) <br /><br />(panic!!!)`;
-          var message2 = "Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)";
+          var htmlMessage = `Oops, you'd better <a href="http://auawsrpt001l/infocharting" target="_blank">check the board</a>! <br /><br />(OrderUpdateRows: 999,999,999,999) <br /><br />(panic!!!)`;
+          var notificationMessage = "Oops, you better check the board! OrderUpdateRows: 999,999,999,999  (panic!!!)";
 
-          if (r.enablePopups) {
-            poppyUppy(agent, message);
+          if (response.enablePopups) {
+            poppyUppy(agent, htmlMessage);
           } else {
-
-            agent.speak(message);
-            triggerClippyNotification(agent, message2);
+            agent.show();
+            agent.speak(htmlMessage);
+            triggerClippyNotification(agent, notificationMessage);
           }
-        });
+        
       } else {
         queues.getBoardAlertImportanceAsync(function (response) {
-
-          chrome.storage.sync.get('enablePopups', function (r) {
-            if (r.enablePopups) {
-              var resp = queues.getQueuesMessage(response);
+            var resp = queues.getQueuesMessage(response);
+             
+            if (response.enablePopups) {
+              
               if (resp.status != queues.BoardAlertImportance.NONE) {
                 poppyUppy(agent, resp.message);
               }
@@ -33,22 +35,34 @@ var pollyStarty = function (agent) {
                 popupWindow.close();
               }
             } else {
-              var resp = queues.getQueuesMessage(response);
+              
               if (resp.status != queues.BoardAlertImportance.NONE) {
-              //if (true || resp.status != queues.BoardAlertImportance.NONE) {
+                stopAndShow(agent);
+                //agent.play('GetTechy');
                 agent.speak(resp.message);
                 triggerClippyNotification(agent);
-                
               }
               else {
-                agent.hide();
+                if(++pollIterations % 5 == 0){
+                  stopAndShow(agent);
+                  //agent.play('IdleHeadScratch');
+                  agent.speak(resp.message);
+                }
+                else{
+                  agent.hide();
+                }
               }
             }
-          });
         });
       }
     });
   }, pollingInterval);
+}
+
+function stopAndShow(agent){
+    agent.stopCurrent();
+    agent.stop();
+    agent.show();
 }
 
 var triggerClippyNotification = function(agent, message){
@@ -70,11 +84,13 @@ var triggerClippyNotification = function(agent, message){
 }
 
 var poppyUppy = function (agent, speaky) {
-  if (popupWindow == null || popupWindow.closed) {
+  if (!popupWindow || popupWindow == null || popupWindow.closed) {
     popupWindow = window.open("", "", "width=600,height=600");
 
     $(popupWindow.document.head).append(hardcodedStyle());
 
+    var clippyElement = $('#clippy-2b3aef30-125c-11e2-892e-0800200c9a66')[0];
+    var clippyBalloonElement = $('.clippy-balloon')[0];
     clippyElement.style.top = '250px';
     clippyElement.style.left = '250px';
 
@@ -88,24 +104,29 @@ var poppyUppy = function (agent, speaky) {
   popupWindow.agent.speak(speaky);
 }
 
-clippy.load('Clippy', function (agent) {
+function playGreetingy(agent){
+  agent.stopCurrent();
+  agent.stop();
+  agent.show();
+  agent.speak("Hello, I'm Clippy!<br /><br />I'm here to help you monitor the queues.<br /><br />I'm going to go have a nap now, but I'll be here if you need me.");
+  agent.play('RestPose');
+}
 
+clippy.load('Clippy', function (agent) {
   clippy.Balloon.prototype.CLOSE_BALLOON_DELAY = 9000;
 
-  // do anything with the loaded agent
-  clippyElement = document.getElementById("clippy-2b3aef30-125c-11e2-892e-0800200c9a66");
-  clippyBalloonElement = document.getElementsByClassName("clippy-balloon")[0];
+  playGreetingy(agent);
+  setTimeout(function() { agent.hide(); }, 8000);
 
   chrome.extension.sendMessage({userChecky:true}, function (response) {
-    var username = response.email;
-    var keithy = username.indexOf("keith") !== -1;
 
-    if (keithy) {
-      keithMode();
+    var isKeithy = response && response.email && response.email.indexOf("keith") !== -1;
+    if (isKeithy) {
+      keithModeStarty();
     } else {
       chrome.storage.sync.get('keithy', function (response) {
-        if (response.keithy) {
-          keithMode();
+        if (response && response.keithy) {
+          keithModeStarty();
         } else {
           pollyStarty(agent);
         }
@@ -260,7 +281,7 @@ clippy.load('Clippy', function (agent) {
   var count = 0;
   var initial = true;
 
-  var keithMode = function () {
+  var keithModeStarty = function () {
     window.setInterval(function () {
       if (initial) {
         agent.speak("Keithy mode enabled, muhahahahaha.");
